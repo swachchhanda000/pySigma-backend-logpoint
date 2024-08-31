@@ -41,6 +41,7 @@ jobs:
       - name: echo output
         run: |
           echo ${{ steps.getfile.outputs.files }}
+          git status
       # - name: Commit coverage badge to repository
       #   if: ${{ runner.os == 'Linux'  }}
       #   run: |
