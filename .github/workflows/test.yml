@@ -33,9 +33,10 @@ jobs:
       - name: Create coverage badge file
         if: ${{ runner.os == 'Linux' }}
         run: |
-          echo "{ \"schemaVersion\": 1, \"label\": \"Coverage\", \"message\": \"${{ env.COVERAGE }}\", \"color\": \"${{ env.COVERAGE_COLOR }}\" }" > coverage-badge.json
+          echo "{ \"schemaVersion\": 2, \"label\": \"Coverage\", \"message\": \"${{ env.COVERAGE }}\", \"color\": \"${{ env.COVERAGE_COLOR }}\" }" > coverage-badge.json
       - name: Commit coverage badge to repository
-        if: ${{ github.repository == 'logpoint/pySigma-backend-logpoint' && github.event_name == 'push' && runner.os == 'Linux'  }}
+        continue-on-error: true
+        if: ${{ runner.os == 'Linux'  }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
