@@ -33,14 +33,21 @@ jobs:
       - name: Create coverage badge file
         if: ${{ runner.os == 'Linux' }}
         run: |
-          echo "{ \"schemaVersion\": 1, \"label\": \"Coverage\", \"message\": \"${{ env.COVERAGE }}\", \"color\": \"${{ env.COVERAGE_COLOR }}\" }" > coverage-badge.json
-      - name: Commit coverage badge to repository
-        if: ${{ github.repository == 'logpoint/pySigma-backend-logpoint' && github.event_name == 'push' && runner.os == 'Linux'  }}
+          echo "{ \"schemaVersion\": 2, \"label\": \"Coverage\", \"message\": \"${{ env.COVERAGE }}\", \"color\": \"${{ env.COVERAGE_COLOR }}\" }" > coverage-badge.json
+      - name: get changed files
+        id: getfile
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add coverage-badge.json
-          git commit -m "Update coverage badge"
-          git push origin HEAD:${{ github.head_ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
+          echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | xargs)"
+      - name: echo output
+        run: |
+          echo ${{ steps.getfile.outputs.files }}
+      # - name: Commit coverage badge to repository
+      #   if: ${{ runner.os == 'Linux'  }}
+      #   run: |
+      #     git config --local user.email "github-actions[bot]@users.noreply.github.com"
+      #     git config --local user.name "github-actions[bot]"
+      #     git add coverage-badge.json
+      #     git commit -m "Update coverage badge"
+      #     git push origin HEAD:${{ github.head_ref }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
